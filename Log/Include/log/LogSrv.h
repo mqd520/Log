@@ -36,6 +36,7 @@ namespace llog
 		static string strFilePath;						// 日志文件路径
 		static queue<struct LogData> LogSrv::quLogs;	// 日志集合
 		static CRITICAL_SECTION section;				// section
+		static string strDirName;						// 目录名
 
 	private:
 		//************************************
@@ -48,13 +49,12 @@ namespace llog
 		//************************************
 		static void WriteToConsole(struct LogData& data);
 
-		//static unsigned WINAPI Run(LPVOID lParam);
-
 	public:
 		//************************************
 		// Method:    初始化
+		// Method:    设置目录名
 		//************************************
-		static void Init();
+		static void Init(/*string dirName = "Log"*/);
 
 		//************************************
 		// Method:    退出
