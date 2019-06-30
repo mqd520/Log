@@ -58,7 +58,28 @@ namespace llog
 
 	void LogSrv::WriteToConsole(struct LogData& data)
 	{
+		WORD color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+
+		if (data.type == ELogSrvType::Debug)
+		{
+			color = FOREGROUND_BLUE | FOREGROUND_GREEN;
+		}
+		else if (data.type == ELogSrvType::Warn)
+		{
+			color = FOREGROUND_RED | FOREGROUND_GREEN;
+		}
+		else if (data.type == ELogSrvType::Error)
+		{
+			color = FOREGROUND_RED;
+		}
+		else if (data.type == ELogSrvType::Fatal)
+		{
+			color = FOREGROUND_RED | FOREGROUND_INTENSITY;
+		}
+
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 		printf("%s \n", data.log.c_str());
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
 
 	void LogSrv::WriteLine(ELogSrvType type, bool b, string format, ...)
