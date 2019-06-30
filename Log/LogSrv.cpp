@@ -38,7 +38,7 @@ namespace llog
 	FileInfo fiError;			// Error file info
 	FileInfo fiFatal;			// Fatal file info
 	string curDate = "";		// 当前日期
-	string strDirName = "Log";	// 默认目录名
+	string strDirName1 = "Log";	// 默认目录名
 
 
 	queue<struct LogData>	LogSrv::quLogs;
@@ -52,13 +52,13 @@ namespace llog
 	}
 
 
-	void LogSrv::Init(/*string dirName*/ /*= "Log"*/)
+	void LogSrv::Init(string dirName /*= "Log"*/)
 	{
 		if (!bInited)
 		{
 			bInited = true;
 
-			//strDirName = dirName;
+			strDirName1 = dirName;
 			curDate = GetCurDate();
 			InitDir();
 			SetFilePathInfo();
@@ -370,7 +370,7 @@ namespace llog
 	void InitDir()
 	{
 		dirExe = GetProgramDir();
-		dirLog = dirExe + strDirName + "\\";
+		dirLog = dirExe + strDirName1 + "\\";
 		fiInfo.strDirPath = dirLog + "Info\\";
 		fiDebug.strDirPath = dirLog + "Debug\\";
 		fiWarn.strDirPath = dirLog + "Warn\\";

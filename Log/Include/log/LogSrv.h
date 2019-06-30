@@ -54,7 +54,7 @@ namespace llog
 		// Method:    初始化
 		// Method:    设置目录名
 		//************************************
-		static void Init(/*string dirName = "Log"*/);
+		static void Init(string dirName = "Log");
 
 		//************************************
 		// Method:    退出
