@@ -1,0 +1,78 @@
+#pragma once
+#include <string>
+#include <queue>
+using namespace std;
+
+namespace llog
+{
+	// 日志服务类型
+	enum class ELogSrvType : int
+	{
+		Info,		// 信息
+		Debug,		// 调试
+		Warn,		// 警告
+		Error,		// 错误
+		Fatal,		// 严重错误
+
+		None		// 无
+	};
+
+	// 日志数据
+	struct LogData
+	{
+		string	log;		// 日志内容
+		ELogSrvType type;	// 日志类型
+		bool b;				// 是否输出到控制台
+	};
+
+
+	// log srv
+	class LogSrv
+	{
+	private:
+		LogSrv();
+
+	private:
+		static string strFilePath;						// 日志文件路径
+		static queue<struct LogData> LogSrv::quLogs;	// 日志集合
+		static CRITICAL_SECTION section;				// section
+
+	private:
+		//************************************
+		// Method:    写入日志到文件
+		//************************************
+		static void WriteToFile(struct LogData& data);
+
+		//************************************
+		// Method:    写入日志到控制台
+		//************************************
+		static void WriteToConsole(struct LogData& data);
+
+		//static unsigned WINAPI Run(LPVOID lParam);
+
+	public:
+		//************************************
+		// Method:    初始化
+		//************************************
+		static void Init();
+
+		//************************************
+		// Method:    退出
+		//************************************
+		static void Exit();
+
+		//************************************
+		// Method:    写入一行日志
+		// Parameter: 日志类型
+		// Parameter: 是否输出到控制台
+		// Parameter: 日志格式
+		// Parameter: ...
+		//************************************
+		static void WriteLine(ELogSrvType type, bool b, string format, ...);
+
+		//************************************
+		// Method:    处理日志
+		//************************************
+		static void ProcessLog();
+	};
+}
