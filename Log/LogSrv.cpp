@@ -41,7 +41,7 @@ namespace llog
 	string strDirName1 = "Log";	// Ä¬ÈÏÄ¿Â¼Ãû
 
 
-	queue<struct LogData>	LogSrv::quLogs;
+	queue<LogData>			LogSrv::quLogs;
 	CRITICAL_SECTION		LogSrv::section;
 
 
@@ -82,7 +82,7 @@ namespace llog
 		}
 	}
 
-	void LogSrv::WriteToFile(struct LogData& data)
+	void LogSrv::WriteToFile(LogData& data)
 	{
 		//FileInfo& fi = GetFileInfo(data.type);
 
@@ -90,7 +90,7 @@ namespace llog
 		{
 			fiInfo.fs << data.log.c_str() << endl;
 		}
-		else if(data.type == ELogSrvType::Debug && fiDebug.bOpened == true)
+		else if (data.type == ELogSrvType::Debug && fiDebug.bOpened == true)
 		{
 			fiDebug.fs << data.log.c_str() << endl;
 		}
@@ -108,7 +108,7 @@ namespace llog
 		}
 	}
 
-	void LogSrv::WriteToConsole(struct LogData& data)
+	void LogSrv::WriteToConsole(LogData& data)
 	{
 		WORD color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 
@@ -134,7 +134,7 @@ namespace llog
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
 
-	void LogSrv::WriteLine(ELogSrvType type, bool b, string format, ...)
+	void LogSrv::WriteLine(ELogSrvType type, string format, ...)
 	{
 		SYSTEMTIME t;
 		GetLocalTime(&t);
@@ -170,7 +170,7 @@ namespace llog
 		char ch[LLOG1_MAXLOGLEN] = { 0 };
 		sprintf_s(ch, "[%s] [%02d-%02d-%02d %02d:%02d:%02d.%03d] %s", title.c_str(), t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds, log);
 
-		struct LogData data = { ch, type, b };
+		LogData data = { ch, type };
 
 		EnterCriticalSection(&section);
 		quLogs.push(data);
@@ -187,13 +187,9 @@ namespace llog
 
 			while (!quLogs.empty())
 			{
-				struct LogData data = quLogs.front();
+				LogData data = quLogs.front();
 				quLogs.pop();
 
-				if (data.b)
-				{
-					WriteToConsole(data);
-				}
 				WriteToFile(data);
 			}
 
@@ -256,31 +252,31 @@ namespace llog
 	{
 		if (!fiInfo.bOpened)
 		{
-			fiInfo.fs.open(fiInfo.strFilePath);
+			fiInfo.fs.open(fiInfo.strFilePath, std::ios_base::app);
 			fiInfo.bOpened = true;
 		}
 
 		if (!fiDebug.bOpened)
 		{
-			fiDebug.fs.open(fiDebug.strFilePath);
+			fiDebug.fs.open(fiDebug.strFilePath, std::ios_base::app);
 			fiDebug.bOpened = true;
 		}
 
 		if (!fiWarn.bOpened)
 		{
-			fiWarn.fs.open(fiWarn.strFilePath);
+			fiWarn.fs.open(fiWarn.strFilePath, std::ios_base::app);
 			fiWarn.bOpened = true;
 		}
 
 		if (!fiError.bOpened)
 		{
-			fiError.fs.open(fiError.strFilePath);
+			fiError.fs.open(fiError.strFilePath, std::ios_base::app);
 			fiError.bOpened = true;
 		}
 
 		if (!fiFatal.bOpened)
 		{
-			fiFatal.fs.open(fiFatal.strFilePath);
+			fiFatal.fs.open(fiFatal.strFilePath, std::ios_base::app);
 			fiFatal.bOpened = true;
 		}
 	}

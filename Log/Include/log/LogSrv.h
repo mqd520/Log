@@ -18,12 +18,11 @@ namespace llog
 	};
 
 	// 日志数据
-	struct LogData
+	typedef struct tagLogData
 	{
 		string	log;		// 日志内容
 		ELogSrvType type;	// 日志类型
-		bool b;				// 是否输出到控制台
-	};
+	}LogData;
 
 
 	// log srv
@@ -34,7 +33,7 @@ namespace llog
 
 	private:
 		static string strFilePath;						// 日志文件路径
-		static queue<struct LogData> LogSrv::quLogs;	// 日志集合
+		static queue<LogData> LogSrv::quLogs;			// 日志集合
 		static CRITICAL_SECTION section;				// section
 		static string strDirName;						// 目录名
 
@@ -42,12 +41,12 @@ namespace llog
 		//************************************
 		// Method:    写入日志到文件
 		//************************************
-		static void WriteToFile(struct LogData& data);
+		static void WriteToFile(LogData& data);
 
 		//************************************
 		// Method:    写入日志到控制台
 		//************************************
-		static void WriteToConsole(struct LogData& data);
+		static void WriteToConsole(LogData& data);
 
 	public:
 		//************************************
@@ -68,7 +67,7 @@ namespace llog
 		// Parameter: 日志格式
 		// Parameter: ...
 		//************************************
-		static void WriteLine(ELogSrvType type, bool b, string format, ...);
+		static void WriteLine(ELogSrvType type, string format, ...);
 
 		//************************************
 		// Method:    处理日志
