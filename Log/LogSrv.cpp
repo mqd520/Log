@@ -77,6 +77,7 @@ namespace llog
 		if (!bExited)
 		{
 			bExited = true;
+			LeaveCriticalSection(&section);
 			DeleteCriticalSection(&section);
 			CloseFile();
 		}
@@ -136,6 +137,11 @@ namespace llog
 
 	void LogSrv::WriteLine(ELogSrvType type, string format, ...)
 	{
+		if (bExited)
+		{
+			return;
+		}
+
 		SYSTEMTIME t;
 		GetLocalTime(&t);
 
